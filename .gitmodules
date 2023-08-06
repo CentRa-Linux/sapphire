@@ -10,3 +10,6 @@
 [submodule "deps/zig-wlroots"]
 	path = deps/zig-wlroots
 	url = https://github.com/swaywm/zig-wlroots.git
+[submodule "deps/wayland-protocols"]
+	path = deps/wayland-protocols
+	url = https://gitlab.freedesktop.org/wayland/wayland-protocols
