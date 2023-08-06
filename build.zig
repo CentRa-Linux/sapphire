@@ -10,6 +10,7 @@ pub fn build(b: *Builder) void {
 
     const scanner = ScanProtocolsStep.create(b);
     scanner.addSystemProtocol("stable/xdg-shell/xdg-shell.xml");
+    scanner.addSystemProtocol("unstable/xdg-decoration/xdg-decoration-unstable-v1.xml");
 
     const wayland = Pkg{
         .name = "wayland",
@@ -37,7 +38,9 @@ pub fn build(b: *Builder) void {
     scanner.generate("wl_output", 4);
     scanner.generate("wl_seat", 7);
     scanner.generate("wl_data_device_manager", 3);
-    scanner.generate("xdg_wm_base", 2);
+    scanner.generate("xdg_wm_base", 3);
+
+    scanner.generate("zxdg_decoration_manager_v1", 1);
 
     const exe = b.addExecutable("sapphire", "src/main.zig");
     exe.setTarget(target);

@@ -72,6 +72,9 @@ const Server = struct {
     grab_box: wlr.Box = undefined,
     resize_edges: wlr.Edges = .{},
 
+    xdg_decoration_mgr: *wlr.XdgDecorationManagerV1,
+    new_toplevel_decoration: wl.Listener(*wlr.XdgToplevelDecorationV1) = wl.Listener(*wlr.XdgToplevelDecorationV1).init(newToplevelDecoration),
+
     fn init(server: *Server) !void {
         const wl_server = try wl.Server.create();
         const backend = try wlr.Backend.autocreate(wl_server);
@@ -88,6 +91,8 @@ const Server = struct {
             .seat = try wlr.Seat.create(wl_server, "default"),
             .cursor = try wlr.Cursor.create(),
             .cursor_mgr = try wlr.XcursorManager.create(null, 24),
+
+            .xdg_decoration_mgr = try wlr.XdgDecorationManagerV1.create(wl_server),
         };
 
         try server.renderer.initServer(wl_server);
@@ -406,6 +411,10 @@ const Server = struct {
         }
         return true;
     }
+
+    fn newToplevelDecoration(_: *wl.Listener(*wlr.XdgToplevelDecorationV1), decoration: *wlr.XdgToplevelDecorationV1) void {
+        _ = decoration.setMode(.server_side);
+    }
 };
 
 const Output = struct {
@@ -424,6 +433,10 @@ const Output = struct {
         os.clock_gettime(os.CLOCK.MONOTONIC, &now) catch @panic("CLOCK_MONOTONIC not supported");
         scene_output.sendFrameDone(&now);
     }
+};
+
+const XdgDeco = struct {
+    view: *View,
 };
 
 const View = struct {
